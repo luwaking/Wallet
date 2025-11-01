@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laam Wallet - All-in-One Crypto Solution</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a00e0;
+            --primary-light: #8e2de2;
+            --secondary: #00c6ff;
+            --dark: #1a1a2e;
+            --darker: #16213e;
+            --light: #f5f5f5;
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --danger: #e84393;
+            --gray: #636e72;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --card-border: rgba(255, 255, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark), var(--darker));
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Auth Styles */
+        .auth-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--card-border);
+            margin-top: 50px;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--primary-light), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .auth-header p {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .auth-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--card-border);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 2px rgba(142, 45, 226, 0.3);
+        }
+
+        .btn {
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(142, 45, 226, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            border: 1px solid var(--card-border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #d6307a;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: var(--dark);
+        }
+
+        .btn-warning:hover {
+            background: #fcad2b;
+        }
+
+        /* Additional button styles for new buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .action-buttons .btn {
+            flex: 1;
+            margin-top: 0;
+        }
+
+        /* Balance Actions */
+        .balance-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .balance-actions .btn {
+            flex: 1;
+            margin-top: 0;
+        }
+
+        /* Settings Button Styles */
+        .settings-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .settings-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--card-border);
+            color: var(--light);
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .settings-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .settings-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: var(--darker);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 10px;
+            min-width: 200px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            margin-top: 5px;
+        }
+
+        .settings-dropdown.active {
+            display: block;
+        }
+
+        .settings-item {
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .settings-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Mnemonic styles */
+        .mnemonic-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--card-border);
+        }
+
+        .mnemonic-words {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .mnemonic-word {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .mnemonic-word .word-index {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-right: 5px;
+        }
+
+        /* Wallet Styles */
+        .wallet-container {
+            width: 100%;
+            display: none;
+        }
+
+        .wallet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            width: 100%;
+        }
+
+        .wallet-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .wallet-logo h1 {
+            font-size: 2rem;
+            background: linear-gradient(to right, var(--primary-light), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .wallet-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .wallet-actions .btn {
+            width: auto;
+            padding: 10px 20px;
+        }
+
+        .wallet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .wallet-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .wallet-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .wallet-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--secondary);
+        }
+
+        .wallet-card h2 i {
+            font-size: 1.3rem;
+        }
+
+        .balance-card {
+            grid-column: span 2;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        }
+
+        .balance-card h2 {
+            color: white;
+        }
+
+        .balance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .balance-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .balance-item .balance-amount {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+
+        .balance-item .balance-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--card-border);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 2px rgba(142, 45, 226, 0.3);
+        }
+
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .radio-item {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .radio-item input {
+            display: none;
+        }
+
+        .radio-item label {
+            display: block;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .radio-item input:checked + label {
+            background: var(--primary);
+            border-color: var(--primary-light);
+        }
+
+        .status-message {
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .status-success {
+            background: rgba(0, 184, 148, 0.2);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .status-error {
+            background: rgba(232, 67, 147, 0.2);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+
+        .status-warning {
+            background: rgba(253, 203, 110, 0.2);
+            border: 1px solid var(--warning);
+            color: var(--warning);
+        }
+
+        .qrcode-container {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .token-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .token-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .token-item:last-child {
+            border-bottom: none;
+        }
+
+        .secret-keys-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(232, 67, 147, 0.1);
+            border-radius: 10px;
+            border: 1px solid var(--danger);
+        }
+
+        .secret-keys-container h3 {
+            color: var(--danger);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .secret-keys-container p {
+            margin: 10px 0;
+            word-break: break-all;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--darker);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .wallet-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .balance-card {
+                grid-column: span 1;
+            }
+            
+            .balance-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .wallet-header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .wallet-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .balance-actions {
+                flex-direction: column;
+            }
+            
+            .mnemonic-words {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .settings-dropdown {
+                right: auto;
+                left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Wallet Setup Section -->
+        <div class="auth-container" id="auth-container">
+            <div class="auth-header">
+                <h1>Laam Wallet</h1>
+                <p>Your All-in-One Crypto Solution</p>
+            </div>
+            
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-tab="create">Create New Wallet</div>
+                <div class="auth-tab" data-tab="import">Import Existing Wallet</div>
+            </div>
+            
+            <div class="auth-form active" id="create-form">
+                <div class="form-group">
+                    <label for="create-password">Set Password</label>
+                    <input type="password" id="create-password" class="form-control" placeholder="Enter a strong password">
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" class="form-control" placeholder="Confirm your password">
+                </div>
+                
+                <button class="btn btn-primary" id="create-btn">Create New Wallet</button>
+                
+                <!-- Mnemonic Display (Hidden Initially) -->
+                <div id="mnemonic-display" style="display: none; margin-top: 20px;">
+                    <div class="mnemonic-container">
+                        <h3 style="text-align: center; margin-bottom: 15px;">
+                            <i class="fas fa-key"></i> Your Recovery Phrase
+                        </h3>
+                        <div class="mnemonic-words" id="mnemonic-words">
+                            <!-- Mnemonic words will be inserted here -->
+                        </div>
+                        <p style="color: var(--warning); text-align: center; margin: 15px 0;">
+                            <i class="fas fa-exclamation-triangle"></i> 
+                            Write down these 12 words and store them in a safe place. You will need them to restore your wallet.
+                        </p>
+                    </div>
+                    <button class="btn btn-primary" id="confirm-mnemonic">
+                        <i class="fas fa-check"></i> I've Saved My Recovery Phrase
+                    </button>
+                </div>
+            </div>
+            
+            <div class="auth-form" id="import-form">
+                <div class="form-group">
+                    <label for="import-mnemonic">12-Word Recovery Phrase</label>
+                    <textarea id="import-mnemonic" class="form-control" placeholder="Enter your 12-word recovery phrase separated by spaces"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="import-password">Set Password</label>
+                    <input type="password" id="import-password" class="form-control" placeholder="Enter a password to encrypt your wallet">
+                </div>
+                
+                <button class="btn btn-primary" id="import-btn">Import Wallet</button>
+                
+                <!-- New action buttons for unlock mode -->
+                <div class="action-buttons" id="unlock-actions" style="display: none; margin-top: 20px;">
+                    <button class="btn btn-warning" id="reset-wallet">
+                        <i class="fas fa-redo"></i> Reset Wallet
+                    </button>
+                    <button class="btn btn-secondary" id="import-new-wallet">
+                        <i class="fas fa-file-import"></i> Import New Wallet
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Wallet Section -->
+     <div class="wallet-container" id="wallet-container">
+            <div class="wallet-header">
+                <div class="wallet-logo">
+                    <i class="fas fa-wallet fa-2x"></i>
+                    <h1>Laam Wallet</h1>
+                </div>
+                <div class="wallet-actions">
+                    <div class="settings-container">
+                        <button class="settings-btn" id="settings-btn">
+                            <i class="fas fa-cog"></i> Settings
+                        </button>
+                        <div class="settings-dropdown" id="settings-dropdown">
+                            <div class="settings-item" id="settings-wallet-keys">
+                                <i class="fas fa-key"></i>
+                                <span>Wallet Keys & Backup</span>
+                            </div>
+                            <div class="settings-item" id="settings-add-token">
+                                <i class="fas fa-plus-circle"></i>
+                                <span>Add Custom Token</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" id="lock-wallet">
+                        <i class="fas fa-lock"></i> Lock Wallet
+                    </button>
+                </div>
+            </div>
+            
+            <div class="wallet-grid">
+                <!-- Balance Card -->
+                <div class="wallet-card balance-card">
+                    <h2><i class="fas fa-coins"></i> Portfolio Balance</h2>
+                    <div class="balance-grid">
+                        <div class="balance-item">
+                            <div class="balance-label">XLM Balance</div>
+                            <div class="balance-amount" id="xlm-balance">0</div>
+                        </div>
+                        <div class="balance-item">
+                            <div class="balance-label">Laam (XLM)</div>
+                            <div class="balance-amount" id="laam-xlm-balance">0</div>
+                        </div>
+                        <div class="balance-item">
+                            <div class="balance-label">BNB Balance</div>
+                            <div class="balance-amount" id="bnb-balance">0</div>
+                        </div>
+                        <div class="balance-item">
+                            <div class="balance-label">Laam (BSC)</div>
+                            <div class="balance-amount" id="laam-bsc-balance">0</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Badhanka Cusub ee Deposit iyo Withdraw -->
+                    <div class="balance-actions">
+                        <button class="btn btn-secondary" id="deposit-bsc">
+                            <i class="fas fa-arrow-down"></i> Deposit BSC
+                        </button>
+                        <button class="btn btn-secondary" id="withdraw-bsc">
+                            <i class="fas fa-arrow-up"></i> Withdraw BSC
+                        </button>
+                    </div>
+                    
+                    <button class="btn btn-secondary" id="check-balances" style="margin-top: 20px;">
+                        <i class="fas fa-sync-alt"></i> Refresh Balances
+                    </button>
+                </div>
+                
+                <!-- Send Crypto -->
+                <div class="wallet-card">
+                    <h2><i class="fas fa-paper-plane"></i> Send Crypto</h2>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" name="asset" value="XLM" id="asset-xlm" checked>
+                            <label for="asset-xlm">XLM</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="asset" value="LaamXLM" id="asset-laamxlm">
+                            <label for="asset-laamxlm">Laam (XLM)</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="asset" value="BSC" id="asset-bsc">
+                            <label for="asset-bsc">BNB</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="asset" value="LaamBSC" id="asset-laambsc">
+                            <label for="asset-laambsc">Laam (BSC)</label>
+                        </div>
+                    </div>
+                    <input type="text" id="recipient" placeholder="Recipient address">
+                    <input type="text" id="amount" placeholder="Amount">
+                    <button class="btn btn-primary" id="send-btn">Send Transaction</button>
+                    <div id="send-status" class="status-message"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wallet Keys & Backup Modal -->
+    <div class="modal" id="wallet-keys-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-key"></i> Wallet Keys & Backup</h2>
+                <button class="close-modal" id="close-wallet-keys">&times;</button>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <p><strong>Stellar Public Key:</strong> <span id="stellar-public"></span></p>
+                <p style="margin-top: 10px;"><strong>BSC Address:</strong> <span id="bsc-address"></span></p>
+            </div>
+            
+            <div class="qrcode-container">
+                <div id="qrcode"></div>
+                <p style="margin-top: 10px;">Scan to receive XLM</p>
+            </div>
+            
+            <!-- Recovery Phrase Section (Hidden by Default) -->
+            <div class="secret-keys-container" id="recovery-phrase-container" style="display: none;">
+                <h3><i class="fas fa-exclamation-triangle"></i> Recovery Phrase (Keep Private!)</h3>
+                <div class="mnemonic-words" id="recovery-phrase-words">
+                    <!-- Recovery phrase words will be inserted here -->
+                </div>
+                <button class="btn btn-danger" id="hide-recovery-phrase">
+                    <i class="fas fa-eye-slash"></i> Hide Recovery Phrase
+                </button>
+            </div>
+            
+            <button class="btn btn-secondary" id="show-recovery-phrase" style="margin-top: 15px;">
+                <i class="fas fa-eye"></i> Show Recovery Phrase
+            </button>
+        </div>
+    </div>
+
+    <!-- Add Custom Token Modal -->
+    <div class="modal" id="add-token-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-plus-circle"></i> Add Custom Token</h2>
+                <button class="close-modal" id="close-add-token">&times;</button>
+            </div>
+            
+            <select id="token-type">
+                <option value="BSC">BSC</option>
+                <option value="Stellar">Stellar</option>
+            </select>
+            <input type="text" id="custom-token-name" placeholder="Token Name">
+            <input type="text" id="custom-token-address" placeholder="Contract Address (BSC) or CODE,ISSUER (Stellar)">
+            <button class="btn btn-primary" id="add-token">Add Token</button>
+            <h3 style="margin-top: 20px;">Your Tokens</h3>
+            <ul class="token-list" id="custom-tokens-list"></ul>
+        </div>
+    </div>
+
+    <!-- BSC Deposit Modal -->
+    <div class="modal" id="deposit-bsc-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-arrow-down"></i> Deposit BSC</h2>
+                <button class="close-modal" id="close-deposit-bsc">&times;</button>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <p><strong>Your BSC Address:</strong> <span id="deposit-bsc-address"></span></p>
+                <p style="margin-top: 10px; color: var(--warning);">
+                    <i class="fas fa-exclamation-triangle"></i> 
+                    Only send BNB or BEP-20 tokens to this address on the BSC network.
+                </p>
+            </div>
+            
+            <div class="qrcode-container">
+                <div id="deposit-bsc-qrcode"></div>
+                <p style="margin-top: 10px;">Scan to receive BSC assets</p>
+            </div>
+            
+            <div class="action-buttons" style="margin-top: 20px;">
+                <button class="btn btn-secondary" id="copy-bsc-address">
+                    <i class="fas fa-copy"></i> Copy Address
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BSC Withdraw Modal -->
+    <div class="modal" id="withdraw-bsc-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-arrow-up"></i> Withdraw BSC</h2>
+                <button class="close-modal" id="close-withdraw-bsc">&times;</button>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" name="withdraw-asset" value="BNB" id="withdraw-bnb" checked>
+                        <label for="withdraw-bnb">BNB</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="withdraw-asset" value="LaamBSC" id="withdraw-laambsc">
+                        <label for="withdraw-laambsc">Laam (BSC)</label>
+                    </div>
+                </div>
+                
+                <input type="text" id="withdraw-recipient" placeholder="Recipient BSC address">
+                <input type="text" id="withdraw-amount" placeholder="Amount">
+                
+                <div class="form-group">
+                    <label for="gas-limit">Gas Limit (Optional)</label>
+                    <input type="text" id="gas-limit" class="form-control" placeholder="Gas limit (default: 21000 for BNB)">
+                </div>
+                
+                <div class="form-group">
+                    <label for="gas-price">Gas Price (Optional, in Gwei)</label>
+                    <input type="text" id="gas-price" class="form-control" placeholder="Gas price in Gwei">
+                </div>
+                
+                <button class="btn btn-primary" id="withdraw-btn">Withdraw</button>
+                <div id="withdraw-status" class="status-message"></div>
+            </div>
+        </div>
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/stellar-sdk@8.2.3/dist/stellar-sdk.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.10.0/dist/ethers.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
+    <script>
+        // ---------- SETTINGS FUNCTIONALITY ----------
+        const settingsBtn = document.getElementById('settings-btn');
+        const settingsDropdown = document.getElementById('settings-dropdown');
+        const settingsAddToken = document.getElementById('settings-add-token');
+        const settingsWalletKeys = document.getElementById('settings-wallet-keys');
+        
+        // Modal elements
+        const walletKeysModal = document.getElementById('wallet-keys-modal');
+        const addTokenModal = document.getElementById('add-token-modal');
+        const depositBscModal = document.getElementById('deposit-bsc-modal');
+        const withdrawBscModal = document.getElementById('withdraw-bsc-modal');
+        const closeWalletKeys = document.getElementById('close-wallet-keys');
+        const closeAddToken = document.getElementById('close-add-token');
+        const closeDepositBsc = document.getElementById('close-deposit-bsc');
+        const closeWithdrawBsc = document.getElementById('close-withdraw-bsc');
+
+        // Toggle settings dropdown
+        settingsBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            settingsDropdown.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', () => {
+            settingsDropdown.classList.remove('active');
+        });
+
+        // Prevent dropdown from closing when clicking inside
+        settingsDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Settings menu items - Open Modals
+        settingsWalletKeys.addEventListener('click', () => {
+            settingsDropdown.classList.remove('active');
+            walletKeysModal.classList.add('active');
+        });
+
+        settingsAddToken.addEventListener('click', () => {
+            settingsDropdown.classList.remove('active');
+            addTokenModal.classList.add('active');
+        });
+
+        // Close modals
+        closeWalletKeys.addEventListener('click', () => {
+            walletKeysModal.classList.remove('active');
+        });
+
+        closeAddToken.addEventListener('click', () => {
+            addTokenModal.classList.remove('active');
+        });
+
+        closeDepositBsc.addEventListener('click', () => {
+            depositBscModal.classList.remove('active');
+        });
+
+        closeWithdrawBsc.addEventListener('click', () => {
+            withdrawBscModal.classList.remove('active');
+        });
+
+        // Close modals when clicking outside
+        walletKeysModal.addEventListener('click', (e) => {
+            if (e.target === walletKeysModal) {
+                walletKeysModal.classList.remove('active');
+            }
+        });
+
+        addTokenModal.addEventListener('click', (e) => {
+            if (e.target === addTokenModal) {
+                addTokenModal.classList.remove('active');
+            }
+        });
+
+        depositBscModal.addEventListener('click', (e) => {
+            if (e.target === depositBscModal) {
+                depositBscModal.classList.remove('active');
+            }
+        });
+
+        withdrawBscModal.addEventListener('click', (e) => {
+            if (e.target === withdrawBscModal) {
+                withdrawBscModal.classList.remove('active');
+            }
+        });
+
+        // ---------- BSC DEPOSIT & WITHDRAW FUNCTIONALITY ----------
+        const depositBscBtn = document.getElementById('deposit-bsc');
+        const withdrawBscBtn = document.getElementById('withdraw-bsc');
+        const copyBscAddressBtn = document.getElementById('copy-bsc-address');
+        const withdrawBtn = document.getElementById('withdraw-btn');
+
+        // Open BSC Deposit Modal
+        depositBscBtn.addEventListener('click', () => {
+            if (!bscWallet) {
+                alert('Please unlock your wallet first');
+                return;
+            }
+            
+            document.getElementById('deposit-bsc-address').textContent = bscWallet.address;
+            
+            // Generate QR code for BSC address
+            generateBSCQRCode(bscWallet.address);
+            
+            depositBscModal.classList.add('active');
+        });
+
+        // Open BSC Withdraw Modal
+        withdrawBscBtn.addEventListener('click', () => {
+            if (!bscWallet) {
+                alert('Please unlock your wallet first');
+                return;
+            }
+            
+            withdrawBscModal.classList.add('active');
+        });
+
+        // Copy BSC Address
+        copyBscAddressBtn.addEventListener('click', () => {
+            const bscAddress = bscWallet.address;
+            navigator.clipboard.writeText(bscAddress).then(() => {
+                alert('BSC address copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        });
+
+        // Generate QR Code for BSC Address
+        function generateBSCQRCode(address) {
+            // Clear previous QR code
+            document.getElementById('deposit-bsc-qrcode').innerHTML = '';
+            
+            QRCode.toCanvas(document.getElementById('deposit-bsc-qrcode'), address, {
+                width: 150,
+                height: 150,
+                margin: 1,
+                color: {
+                    dark: '#FFFFFF',
+                    light: '#00000000'
+                }
+            }, function(err) {
+                if (err) console.error(err);
+            });
+        }
+// Withdraw BSC Assets
+        withdrawBtn.addEventListener('click', async () => {
+            const recipient = document.getElementById('withdraw-recipient').value;
+            const amount = document.getElementById('withdraw-amount').value;
+            const gasLimit = document.getElementById('gas-limit').value || '21000';
+            const gasPrice = document.getElementById('gas-price').value;
+            const selectedAsset = document.querySelector('input[name="withdraw-asset"]:checked').value;
+            const statusEl = document.getElementById('withdraw-status');
+            
+            if (!bscWallet) {
+                alert('Please unlock your wallet first');
+                return;
+            }
+            
+            if (!recipient || !amount) {
+                alert('Please enter recipient address and amount');
+                return;
+            }
+            
+            statusEl.textContent = `Withdrawing ${selectedAsset}...`;
+            statusEl.className = 'status-message';
+            
+            try {
+                const walletConnected = bscWallet.connect(bscProvider);
+                
+                if (selectedAsset === 'BNB') {
+                    // Withdraw BNB
+                    const txOptions = {
+                        to: recipient,
+                        value: ethers.parseEther(amount.toString())
+                    };
+                    
+                    // Add gas options if provided
+                    if (gasLimit) txOptions.gasLimit = gasLimit;
+                    if (gasPrice) txOptions.gasPrice = ethers.parseUnits(gasPrice, 'gwei');
+                    
+                    const tx = await walletConnected.sendTransaction(txOptions);
+                    statusEl.textContent = `BNB withdrawal submitted! TX: ${tx.hash}`;
+                    statusEl.className = 'status-message status-success';
+                    
+                    await tx.wait();
+                    statusEl.textContent = `BNB withdrawal confirmed! TX: ${tx.hash}`;
+                } else if (selectedAsset === 'LaamBSC') {
+                    // Withdraw Laam (BSC) token
+                    if (!laamBscContractAddress || laamBscContractAddress === "YOUR_BSC_LAAM_CONTRACT_ADDRESS") {
+                        statusEl.textContent = 'Laam BSC contract address not configured';
+                        statusEl.className = 'status-message status-error';
+                        return;
+                    }
+                    
+                    const laamContract = new ethers.Contract(laamBscContractAddress, laamBscAbi, walletConnected);
+                    
+                    const txOptions = {};
+                    // Add gas options if provided
+                    if (gasLimit) txOptions.gasLimit = gasLimit;
+                    if (gasPrice) txOptions.gasPrice = ethers.parseUnits(gasPrice, 'gwei');
+                    
+                    const tx = await laamContract.transfer(recipient, ethers.parseUnits(amount.toString(), 18), txOptions);
+                    statusEl.textContent = `Laam (BSC) withdrawal submitted! TX: ${tx.hash}`;
+                    statusEl.className = 'status-message status-success';
+                    
+                    await tx.wait();
+                    statusEl.textContent = `Laam (BSC) withdrawal confirmed! TX: ${tx.hash}`;
+                }
+                
+                // Refresh balances after successful transaction
+                setTimeout(refreshBalances, 3000);
+            } catch(e) {
+                console.error(e);
+                statusEl.textContent = 'Withdrawal Failed! Check recipient address and balance.';
+                statusEl.className = 'status-message status-error';
+            }
+        });
+
+        // ---------- WALLET SETUP SYSTEM ----------
+        const authContainer = document.getElementById('auth-container');
+        const walletContainer = document.getElementById('wallet-container');
+        const createForm = document.getElementById('create-form');
+        const importForm = document.getElementById('import-form');
+        const authTabs = document.querySelectorAll('.auth-tab');
+        const createBtn = document.getElementById('create-btn');
+        const importBtn = document.getElementById('import-btn');
+        const lockWalletBtn = document.getElementById('lock-wallet');
+        const resetWalletBtn = document.getElementById('reset-wallet');
+        const importNewWalletBtn = document.getElementById('import-new-wallet');
+        const unlockActions = document.getElementById('unlock-actions');
+        const mnemonicDisplay = document.getElementById('mnemonic-display');
+        const confirmMnemonicBtn = document.getElementById('confirm-mnemonic');
+        const mnemonicWords = document.getElementById('mnemonic-words');
+        const showRecoveryPhraseBtn = document.getElementById('show-recovery-phrase');
+        const hideRecoveryPhraseBtn = document.getElementById('hide-recovery-phrase');
+        const recoveryPhraseContainer = document.getElementById('recovery-phrase-container');
+        const recoveryPhraseWords = document.getElementById('recovery-phrase-words');
+
+        // Global variables for wallet
+        let stellarKeypair = null;
+        let bscWallet = null;
+        let customTokens = [];
+        let currentMnemonic = null;
+
+        // Switch between create and import tabs
+        authTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.getAttribute('data-tab');
+                
+                authTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                if (tabName === 'create') {
+                    createForm.classList.add('active');
+                    importForm.classList.remove('active');
+                    mnemonicDisplay.style.display = 'none';
+                } else {
+                    importForm.classList.add('active');
+                    createForm.classList.remove('active');
+                    
+                    // Check if we need to show unlock form
+                    setupImportForm();
+                }
+            });
+        });
+        // Setup import form based on whether wallet exists
+        function setupImportForm() {
+            const walletData = localStorage.getItem('laamWallet');
+            const mnemonicGroup = document.querySelector('label[for="import-mnemonic"]').parentElement;
+            
+            if (walletData) {
+                // Wallet exists - show unlock form
+                mnemonicGroup.style.display = 'none';
+                document.querySelector('label[for="import-password"]').textContent = "Enter Password";
+                document.getElementById('import-password').placeholder = "Enter your wallet password";
+                importBtn.textContent = "Unlock Wallet";
+                unlockActions.style.display = 'flex';
+            } else {
+                // No wallet - show full import form
+                mnemonicGroup.style.display = 'block';
+                document.querySelector('label[for="import-password"]').textContent = "Set Password";
+                document.getElementById('import-password').placeholder = "Enter a password to encrypt your wallet";
+                importBtn.textContent = "Import Wallet";
+                unlockActions.style.display = 'none';
+            }
+        }
+
+        // Create new wallet
+        createBtn.addEventListener('click', () => {
+            const password = document.getElementById('create-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            
+            if (!password) {
+                alert('Please enter a password');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+            
+            if (password.length < 8) {
+                alert('Password should be at least 8 characters long');
+                return;
+            }
+            
+            // Generate new mnemonic and display it
+            generateNewMnemonic();
+        });
+
+        // Confirm mnemonic and create wallet
+        confirmMnemonicBtn.addEventListener('click', () => {
+            const password = document.getElementById('create-password').value;
+            createWalletFromMnemonic(currentMnemonic, password);
+        });
+
+        // Import existing wallet or unlock wallet
+        importBtn.addEventListener('click', () => {
+            const walletData = localStorage.getItem('laamWallet');
+            
+            if (walletData) {
+                // Unlock existing wallet
+                unlockWallet();
+            } else {
+                // Import new wallet
+                importNewWallet();
+            }
+        });
+
+        // Reset wallet function
+        resetWalletBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to reset your wallet? This will delete your current wallet and all its data. This action cannot be undone!')) {
+                localStorage.removeItem('laamWallet');
+                stellarKeypair = null;
+                bscWallet = null;
+                currentMnemonic = null;
+                alert('Wallet has been reset successfully!');
+                setupImportForm();
+                
+                // Clear form fields
+                document.getElementById('import-password').value = '';
+            }
+        });
+
+        // Import new wallet function (show full form)
+        importNewWalletBtn.addEventListener('click', () => {
+            // Show the full import form
+            const mnemonicGroup = document.querySelector('label[for="import-mnemonic"]').parentElement;
+            
+            mnemonicGroup.style.display = 'block';
+            document.querySelector('label[for="import-password"]').textContent = "Set Password";
+            document.getElementById('import-password').placeholder = "Enter a password to encrypt your wallet";
+            importBtn.textContent = "Import Wallet";
+            unlockActions.style.display = 'none';
+            
+            // Clear form fields
+            document.getElementById('import-mnemonic').value = '';
+            document.getElementById('import-password').value = '';
+        });
+
+        // Show/Hide Recovery Phrase
+        showRecoveryPhraseBtn.addEventListener('click', () => {
+            if (!stellarKeypair || !bscWallet) {
+                alert('Please unlock your wallet first');
+                return;
+            }
+            
+            // Get mnemonic from localStorage and decrypt it
+            const password = prompt('Enter your password to view recovery phrase:');
+            if (!password) return;
+            
+            const ciphertext = localStorage.getItem('laamWallet');
+            if (!ciphertext) {
+                alert('No wallet found');
+                return;
+            }
+            
+            try {
+                const bytes = CryptoJS.AES.decrypt(ciphertext, password);
+                const data = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+                
+                if (data.mnemonic) {
+                    displayMnemonicWords(data.mnemonic, recoveryPhraseWords);
+                    recoveryPhraseContainer.style.display = 'block';
+                    showRecoveryPhraseBtn.style.display = 'none';
+                } else {
+                    alert('Recovery phrase not found in wallet data');
+                }
+            } catch(e) {
+                alert('Wrong password or corrupted wallet data');
+            }
+        });
+
+        hideRecoveryPhraseBtn.addEventListener('click', () => {
+            recoveryPhraseContainer.style.display = 'none';
+            showRecoveryPhraseBtn.style.display = 'block';
+        });
+   // Generate new mnemonic
+        function generateNewMnemonic() {
+            try {
+                // Generate a random mnemonic (12 words)
+                const wallet = ethers.Wallet.createRandom();
+                currentMnemonic = wallet.mnemonic.phrase;
+                
+                // Display the mnemonic to the user
+                displayMnemonicWords(currentMnemonic, mnemonicWords);
+                mnemonicDisplay.style.display = 'block';
+                
+                // Scroll to mnemonic display
+                mnemonicDisplay.scrollIntoView({ behavior: 'smooth' });
+            } catch(e) {
+                alert('Error generating mnemonic: ' + e.message);
+                console.error(e);
+            }
+        }
+
+        // Display mnemonic words in a grid
+        function displayMnemonicWords(mnemonic, container) {
+            const words = mnemonic.split(' ');
+            container.innerHTML = '';
+            
+            words.forEach((word, index) => {
+                const wordElement = document.createElement('div');
+                wordElement.className = 'mnemonic-word';
+                wordElement.innerHTML = `<span class="word-index">${index + 1}.</span> ${word}`;
+                container.appendChild(wordElement);
+            });
+        }
+
+        // Create wallet from mnemonic
+        function createWalletFromMnemonic(mnemonic, password) {
+            try {
+                // Validate mnemonic using ethers v6 method
+                if (!ethers.Mnemonic.isValidMnemonic(mnemonic)) {
+                    alert('Invalid mnemonic phrase');
+                    return;
+                }
+                
+                // Create BSC wallet from mnemonic
+                const bscWallet = ethers.Wallet.fromPhrase(mnemonic);
+                
+                // Create Stellar keypair from mnemonic
+                // For Stellar, we'll use the first 32 bytes of the mnemonic's entropy as the seed
+                const seed = CryptoJS.PBKDF2(mnemonic, 'stellar-salt', {
+                    keySize: 32 / 4, // 32 bytes
+                    iterations: 1000
+                });
+                
+                const seedBytes = CryptoJS.enc.Hex.parse(seed.toString(CryptoJS.enc.Hex));
+                const seedArray = new Uint8Array(seedBytes.words.length * 4);
+                
+                for (let i = 0; i < seedBytes.words.length; i++) {
+                    seedArray[i * 4] = (seedBytes.words[i] >> 24) & 0xff;
+                    seedArray[i * 4 + 1] = (seedBytes.words[i] >> 16) & 0xff;
+                    seedArray[i * 4 + 2] = (seedBytes.words[i] >> 8) & 0xff;
+                    seedArray[i * 4 + 3] = seedBytes.words[i] & 0xff;
+                }
+                
+                const stellarKeypair = StellarSdk.Keypair.fromRawEd25519Seed(seedArray.slice(0, 32));
+                
+                // Save wallet to localStorage
+                const data = JSON.stringify({
+                    mnemonic: mnemonic,
+                    stellarSecret: stellarKeypair.secret(), 
+                    bscPrivateKey: bscWallet.privateKey
+                });
+                
+                localStorage.setItem('laamWallet', CryptoJS.AES.encrypt(data, password).toString());
+                
+                // Set wallet in memory
+                window.stellarKeypair = stellarKeypair;
+                window.bscWallet = bscWallet;
+                window.currentMnemonic = mnemonic;
+                
+                // Display public keys in modal
+                document.getElementById('stellar-public').textContent = stellarKeypair.publicKey();
+                document.getElementById('bsc-address').textContent = bscWallet.address;
+                
+                // Generate QR code for Stellar public key
+                generateQRCode(stellarKeypair.publicKey());
+                
+                alert('Wallet created successfully!');
+                showWallet();
+            } catch(e) {
+                alert('Error creating wallet: ' + e.message);
+                console.error(e);
+            }
+        }
+
+        // Import new wallet function
+        function importNewWallet() {
+            const mnemonic = document.getElementById('import-mnemonic').value.trim();
+            const password = document.getElementById('import-password').value;
+            
+            if (!mnemonic || !password) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            if (password.length < 8) {
+                alert('Password should be at least 8 characters long');
+                return;
+            }
+            
+            createWalletFromMnemonic(mnemonic, password);
+        }
+
+        // Unlock wallet function
+        function unlockWallet() {
+            const password = document.getElementById('import-password').value;
+            
+            if (!password) {
+                alert('Please enter your password');
+                return;
+            }
+            
+            const ciphertext = localStorage.getItem('laamWallet');
+            if (!ciphertext) {
+                alert('No wallet found');
+                return;
+            }
+            
+            try {
+                const bytes = CryptoJS.AES.decrypt(ciphertext, password);
+                const data = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+                
+                stellarKeypair = StellarSdk.Keypair.fromSecret(data.stellarSecret);
+                bscWallet = new ethers.Wallet(data.bscPrivateKey);
+                currentMnemonic = data.mnemonic;
+                
+                // Display public keys only
+                document.getElementById('stellar-public').textContent = stellarKeypair.publicKey();
+                document.getElementById('bsc-address').textContent = bscWallet.address;
+                
+                // Generate QR code for Stellar public key
+                generateQRCode(stellarKeypair.publicKey());
+                
+                alert('Wallet unlocked successfully!');
+                showWallet();
+            } catch(e) {
+                alert('Wrong password or corrupted wallet data');
+            }
+        }
+
+        // Lock wallet function
+        lockWalletBtn.addEventListener('click', () => {
+            stellarKeypair = null;
+            bscWallet = null;
+            currentMnemonic = null;
+            showAuth();
+        });
+
+        // Show wallet if user has a wallet
+        function checkWalletStatus() {
+            const walletData = localStorage.getItem('laamWallet');
+            
+            if (walletData) {
+                // Wallet exists, show unlock form
+                showAuth();
+                // Switch to import tab for unlocking
+                authTabs[1].click();
+            } else {
+                showAuth();
+            }
+        }
+
+        function showWallet() {
+            authContainer.style.display = 'none';
+            walletContainer.style.display = 'block';
+            // Refresh balances when wallet is shown
+            refreshBalances();
+        }
+
+        function showAuth() {
+            authContainer.style.display = 'block';
+            walletContainer.style.display = 'none';
+            // Clear sensitive data from form fields
+            document.getElementById('create-password').value = '';
+            document.getElementById('confirm-password').value = '';
+            document.getElementById('import-mnemonic').value = '';
+            document.getElementById('import-password').value = '';
+            document.getElementById('stellar-public').textContent = '';
+            document.getElementById('bsc-address').textContent = '';
+            document.getElementById('qrcode').innerHTML = '';
+            mnemonicDisplay.style.display = 'none';
+            recoveryPhraseContainer.style.display = 'none';
+            showRecoveryPhraseBtn.style.display = 'block';
+            
+            // Setup import form based on wallet existence
+            setupImportForm();
+        }
+
+        // Generate QR Code
+        function generateQRCode(publicKey) {
+            // Clear previous QR code
+            document.getElementById('qrcode').innerHTML = '';
+            
+            QRCode.toCanvas(document.getElementById('qrcode'), publicKey, {
+                width: 150,
+                height: 150,
+                margin: 1,
+                color: {
+                    dark: '#FFFFFF',
+                    light: '#00000000'
+                }
+            }, function(err) {
+                if (err) console.error(err);
+            });
+        }
+
+        // ---------- WALLET FUNCTIONALITY ----------
+        // Configuration
+        const stellarServer = new StellarSdk.Server('https://horizon.stellar.org');
+        const laamXlmAsset = new StellarSdk.Asset('Laam','GAL4ECDAXNBMJYFCWIJ32HKVIRLCNEXY664CAZYI3EINQWPLXTMEPR64');
+        const bscProvider = new ethers.JsonRpcProvider('https://bsc-dataseed.binance.org/');
+        const laamBscContractAddress = "YOUR_BSC_LAAM_CONTRACT_ADDRESS";
+        const laamBscAbi = ["function balanceOf(address owner) view returns (uint256)","function transfer(address to, uint amount) returns (bool)"];
+
+        // Balance Functions
+        async function getCustomBscTokenBalance(tokenAddress) {
+            try {
+                const walletConnected = bscWallet.connect(bscProvider);
+                const abi = ["function balanceOf(address owner) view returns (uint256)", "function decimals() view returns (uint8)"];
+                const contract = new ethers.Contract(tokenAddress, abi, walletConnected);
+                const balance = await contract.balanceOf(walletConnected.address);
+                const decimals = await contract.decimals();
+                return ethers.formatUnits(balance, decimals);
+            } catch(e) {
+                return '0';
+            }
+        }
+
+        async function getCustomStellarTokenBalance(assetCode, issuer) {
+            try {
+                const account = await stellarServer.loadAccount(stellarKeypair.publicKey());
+                const bal = account.balances.find(b => b.asset_code === assetCode && b.asset_issuer === issuer)?.balance || '0';
+                return bal;
+            } catch(e) {
+                return '0';
+            }
+        }
+
+        async function refreshBalances() {
+            if (!stellarKeypair || !bscWallet) return;
+            
+            try {
+                const account = await stellarServer.loadAccount(stellarKeypair.publicKey());
+                document.getElementById('xlm-balance').textContent = account.balances.find(b => b.asset_type === 'native')?.balance || '0';
+                document.getElementById('laam-xlm-balance').textContent = account.balances.find(b => b.asset_code === 'Laam')?.balance || '0';
+            } catch(e) {
+                document.getElementById('xlm-balance').textContent = '0';
+                document.getElementById('laam-xlm-balance').textContent = '0';
+            }
+            
+            try {
+                const walletConnected = bscWallet.connect(bscProvider);
+                const bnbBal = await walletConnected.getBalance();
+                document.getElementById('bnb-balance').textContent = ethers.formatEther(bnbBal);
+                
+                if (laamBscContractAddress && laamBscContractAddress !== "YOUR_BSC_LAAM_CONTRACT_ADDRESS") {
+                    const laamContract = new ethers.Contract(laamBscContractAddress, laamBscAbi, walletConnected);
+                    const laamBal = await laamContract.balanceOf(walletConnected.address);
+                    document.getElementById('laam-bsc-balance').textContent = ethers.formatUnits(laamBal, 18);
+                } else {
+                    document.getElementById('laam-bsc-balance').textContent = '0';
+                }
+            } catch(e) {
+                document.getElementById('bnb-balance').textContent = '0';
+                document.getElementById('laam-bsc-balance').textContent = '0';
+            }
+
+            // Update custom tokens
+            const ul = document.getElementById('custom-tokens-list');
+            ul.innerHTML = '';
+            
+            for (let t of customTokens) {
+                let balance = '0';
+                if (t.type === 'BSC') {
+                    balance = await getCustomBscTokenBalance(t.address);
+                } else if (t.type === 'Stellar') {
+                    const [code, issuer] = t.address.split(',');
+                    balance = await getCustomStellarTokenBalance(code.trim(), issuer.trim());
+                }
+                
+                const li = document.createElement('li');
+                li.className = 'token-item';
+                li.innerHTML = `
+                    <span>${t.name}</span>
+                    <span>${balance}</span>
+                `;
+                ul.appendChild(li);
+            }
+        }
+
+        document.getElementById('check-balances').addEventListener('click', refreshBalances);
+
+        // Send Transaction
+        document.getElementById('send-btn').addEventListener('click', async () => {
+            const recipient = document.getElementById('recipient').value;
+            const amount = document.getElementById('amount').value;
+            const statusEl = document.getElementById('send-status');
+            const selectedAsset = document.querySelector('input[name="asset"]:checked').value;
+            
+            if (!stellarKeypair || !bscWallet) {
+                alert('Please unlock your wallet first');
+                return;
+            }
+            
+            if (!recipient || !amount) {
+                alert('Please enter recipient address and amount');
+                return;
+            }
+            
+            statusEl.textContent = `Sending ${selectedAsset}...`;
+            statusEl.className = 'status-message';
+            
+            try {
+                if (selectedAsset === 'XLM') {
+                    const account = await stellarServer.loadAccount(stellarKeypair.publicKey());
+                    const tx = new StellarSdk.TransactionBuilder(account, {
+                        fee: StellarSdk.BASE_FEE,
+                        networkPassphrase: StellarSdk.Networks.PUBLIC
+                    })
+                    .addOperation(StellarSdk.Operation.payment({
+                        destination: recipient,
+                        asset: StellarSdk.Asset.native(),
+                        amount: amount.toString()
+                    }))
+                    .setTimeout(30)
+                    .build();
+                    
+                    tx.sign(stellarKeypair);
+                    await stellarServer.submitTransaction(tx);
+                    statusEl.textContent = 'XLM Sent Successfully!';
+                    statusEl.className = 'status-message status-success';
+                } else if (selectedAsset === 'LaamXLM') {
+                    const account = await stellarServer.loadAccount(stellarKeypair.publicKey());
+                    const tx = new StellarSdk.TransactionBuilder(account, {
+                        fee: StellarSdk.BASE_FEE,
+                        networkPassphrase: StellarSdk.Networks.PUBLIC
+                    })
+                    .addOperation(StellarSdk.Operation.payment({
+                        destination: recipient,
+                        asset: laamXlmAsset,
+                        amount: amount.toString()
+                    }))
+                    .setTimeout(30)
+                    .build();
+                    
+                    tx.sign(stellarKeypair);
+                    await stellarServer.submitTransaction(tx);
+                    statusEl.textContent = 'Laam (XLM) Sent Successfully!';
+                    statusEl.className = 'status-message status-success';
+                } else if (selectedAsset === 'BSC') {
+                    const walletConnected = bscWallet.connect(bscProvider);
+                    const tx = await walletConnected.sendTransaction({
+                        to: recipient,
+                        value: ethers.parseEther(amount.toString())
+                    });
+                    
+                    await tx.wait();
+                    statusEl.textContent = 'BNB Sent Successfully!';
+                    statusEl.className = 'status-message status-success';
+                } else if (selectedAsset === 'LaamBSC') {
+                    const walletConnected = bscWallet.connect(bscProvider);
+                    const laamContract = new ethers.Contract(laamBscContractAddress, laamBscAbi, walletConnected);
+                    const tx = await laamContract.transfer(recipient, ethers.parseUnits(amount.toString(), 18));
+                    
+                    await tx.wait();
+                    statusEl.textContent = 'Laam (BSC) Sent Successfully!';
+                    statusEl.className = 'status-message status-success';
+                }
+                     // Refresh balances after successful transaction
+                setTimeout(refreshBalances, 2000);
+            } catch(e) {
+                console.error(e);
+                statusEl.textContent = 'Transaction Failed! Check recipient address and balance.';
+                statusEl.className = 'status-message status-error';
+            }
+        });
+
+        // Add Custom Token
+        document.getElementById('add-token').addEventListener('click', async () => {
+            const name = document.getElementById('custom-token-name').value.trim();
+            const address = document.getElementById('custom-token-address').value.trim();
+            const type = document.getElementById('token-type').value;
+            
+            if (!name || !address) return alert('Fill all fields');
+            
+            let balance = '0';
+            if (type === 'BSC') {
+                balance = await getCustomBscTokenBalance(address);
+            } else if (type === 'Stellar') {
+                const [assetCode, issuer] = address.split(',');
+                if (!assetCode || !issuer) return alert('Stellar format: CODE,ISSUER');
+                balance = await getCustomStellarTokenBalance(assetCode.trim(), issuer.trim());
+            }
+            
+            customTokens.push({name, address, type, balance});
+            
+            // Update UI
+            const ul = document.getElementById('custom-tokens-list');
+            const li = document.createElement('li');
+            li.className = 'token-item';
+            li.innerHTML = `
+                <span>${name}</span>
+                <span>${balance}</span>
+            `;
+            ul.appendChild(li);
+            
+            // Clear form
+            document.getElementById('custom-token-name').value = '';
+            document.getElementById('custom-token-address').value = '';
+        });
+
+        // Initialize the app
+        checkWalletStatus();
+    </script>
+</body>
+</html>
